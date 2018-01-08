@@ -14,6 +14,8 @@ class StatusCommand extends Command
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -35,7 +37,10 @@ class StatusCommand extends Command
 
         $handler = new ProcessClient();
         $handler->setSocketPath($config['socket-path']);
-        $handler->getStatus(function ($status) use ($output) {
+        $handler->getStatus(/**
+         * @return void
+         */
+        function ($status) use ($output) {
             $output->writeln($this->parseStatus($status));
         });
 

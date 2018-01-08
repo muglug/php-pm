@@ -10,9 +10,14 @@ class ClosureHelper
 {
     /**
      * Return a closure that assigns a property value
+     *
+     * @return \Closure
      */
     public function getPropertyAccessor($propertyName, $newValue) {
-        return function () use ($propertyName, $newValue) {
+        return /**
+         * @return void
+         */
+        function () use ($propertyName, $newValue) {
             $this->$propertyName = $newValue;
         };
     }

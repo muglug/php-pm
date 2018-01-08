@@ -69,13 +69,18 @@ class RequestHandler
      * Handle incoming client connection
      *
      * @param ConnectionInterface $incoming
+     *
+     * @return void
      */
     public function handle(ConnectionInterface $incoming)
     {
         $this->incoming = $incoming;
 
         $this->incoming->on('data', [$this, 'handleData']);
-        $this->incoming->on('close', function () {
+        $this->incoming->on('close', /**
+         * @return void
+         */
+        function () {
             $this->connectionOpen = false;
         });
 
@@ -88,6 +93,8 @@ class RequestHandler
      * and headers have been received
      *
      * @param string $data
+     *
+     * @return void
      */
     public function handleData($data)
     {
@@ -111,6 +118,8 @@ class RequestHandler
     /**
      * Get next free slave from pool
      * Asynchronously keep trying until slave becomes available
+     *
+     * @return void
      */
     public function getNextSlave()
     {
@@ -133,6 +142,8 @@ class RequestHandler
      * Slave available handler
      *
      * @param Slave $slave available slave instance
+     *
+     * @return void
      */
     public function slaveAvailable(Slave $slave)
     {
@@ -145,7 +156,10 @@ class RequestHandler
 
         $this->slave = $slave;
 
-        $this->verboseTimer(function($took) {
+        $this->verboseTimer(/**
+         * @return string
+         */
+        function($took) {
             return sprintf('<info>took abnormal %.3f seconds for choosing next free worker</info>', $took);
         });
 
@@ -166,12 +180,17 @@ class RequestHandler
      * Handle successful slave connection
      *
      * @param ConnectionInterface slave connection
+     *
+     * @return void
      */
     public function slaveConnected(ConnectionInterface $connection)
     {
         $this->connection = $connection;
 
-        $this->verboseTimer(function($took) {
+        $this->verboseTimer(/**
+         * @return string
+         */
+        function($took) {
             return sprintf('<info>Took abnormal %.3f seconds for connecting to worker %d</info>', $took, $this->slave->getPort());
         });
 
@@ -190,12 +209,17 @@ class RequestHandler
 
     /**
      * Handle slave disconnected
-     *
+     * 
      * Typically called after slave has finished handling request
+     *
+     * @return void
      */
     public function slaveClosed()
     {
-        $this->verboseTimer(function($took) {
+        $this->verboseTimer(/**
+         * @return string
+         */
+        function($took) {
             return sprintf('<info>Worker %d took abnormal %.3f seconds for handling a connection</info>', $this->slave->getPort(), $took);
         });
 
@@ -221,19 +245,24 @@ class RequestHandler
 
     /**
      * Handle failed slave connection
-     *
+     * 
      * Connection may fail because of timeouts or crashed or dying worker.
      * Since the worker may only very busy or dying it's put back into the
      * available worker list. If it is really dying it will be removed from the
      * worker list by the connection:close event.
      *
      * @param \Exception slave connection error
+     *
+     * @return void
      */
     public function slaveConnectFailed(\Exception $e)
     {
         $this->slave->release();
 
-        $this->verboseTimer(function($took) use ($e) {
+        $this->verboseTimer(/**
+         * @return string
+         */
+        function($took) use ($e) {
             return sprintf(
                 '<error>Connection to worker %d failed. Try #%d, took %.3fs ' .
                 '(timeout %ds). Error message: [%d] %s</error>',
@@ -255,6 +284,8 @@ class RequestHandler
      *
      * @param callable $callback
      * @param bool $always Invoke callback regardless of execution time
+     *
+     * @return void
      */
     protected function verboseTimer($callback, $always = false)
     {

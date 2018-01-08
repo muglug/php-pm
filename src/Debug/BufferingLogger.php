@@ -54,6 +54,9 @@ class BufferingLogger extends AbstractLogger
         return new static();
     }
 
+    /**
+     * @return void
+     */
     public function log($level, $message, array $context = [])
     {
         $this->logs[] = [$level, $message, $context];

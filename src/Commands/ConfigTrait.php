@@ -13,6 +13,9 @@ trait ConfigTrait
 {
     protected $file = './ppm.json';
 
+    /**
+     * @return void
+     */
     protected function configurePPMOptions(Command $command)
     {
         $command
@@ -33,11 +36,19 @@ trait ConfigTrait
             ->addOption('config', 'c', InputOption::VALUE_REQUIRED, 'Path to config file', '');
     }
 
+    /**
+     * @return void
+     */
     protected function renderConfig(OutputInterface $output, array $config)
     {
         $table = new Table($output);
 
-        $rows = array_map(function ($a, $b) {
+        $rows = array_map(/**
+         * @return array
+         *
+         * @psalm-return array{0:mixed, 1:mixed}
+         */
+        function ($a, $b) {
             return [$a, $b];
         }, array_keys($config), $config);
         $table->addRows($rows);

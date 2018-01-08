@@ -64,6 +64,8 @@ class Slave
 
     /**
      * Attach a slave to a running process
+     *
+     * @return void
      */
     public function attach(Process $process)
     {

@@ -14,6 +14,8 @@ trait BootstrapTrait
      * @param string|null $appBootstrap The environment your application will use to bootstrap (if any)
      * @param string $appenv
      * @param boolean $debug If debug is enabled
+     *
+     * @return void
      */
     private function bootstrapApplicationEnvironment($appBootstrap, $appenv, $debug)
     {

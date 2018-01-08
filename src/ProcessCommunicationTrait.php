@@ -23,6 +23,8 @@ trait ProcessCommunicationTrait
      * @param string $data
      *
      * @throws \Exception when invalid 'cmd' in $data.
+     *
+     * @return void
      */
     public function processMessage(ConnectionInterface $conn, $data)
     {
@@ -40,12 +42,17 @@ trait ProcessCommunicationTrait
      * Binds data-listener to $conn and waits for incoming commands.
      *
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function bindProcessMessage(ConnectionInterface $conn)
     {
         $buffer = '';
 
-        $conn->on('data', function ($data) use ($conn, &$buffer) {
+        $conn->on('data', /**
+         * @return void
+         */
+        function ($data) use ($conn, &$buffer) {
             $buffer .= $data;
 
             if (substr($buffer, -strlen(PHP_EOL)) === PHP_EOL) {
@@ -66,6 +73,8 @@ trait ProcessCommunicationTrait
      * @param ConnectionInterface $conn
      * @param string $command
      * @param array $message
+     *
+     * @return void
      */
     protected function sendMessage(ConnectionInterface $conn, $command, array $message = [])
     {
@@ -135,6 +144,8 @@ trait ProcessCommunicationTrait
 
     /**
      * @param string $socketPath
+     *
+     * @return void
      */
     public function setSocketPath($socketPath)
     {

@@ -10,6 +10,8 @@ class InvokableMiddleware implements BridgeInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function bootstrap($appBootstrap, $appenv, $debug)
     {

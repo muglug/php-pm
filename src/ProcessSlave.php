@@ -149,6 +149,8 @@ class ProcessSlave
 
     /**
      * Shuts down the event loop. This basically exits the process.
+     *
+     * @return void
      */
     public function shutdown()
     {
@@ -242,6 +244,8 @@ class ProcessSlave
      * @param boolean $debug
      *
      * @throws \Exception
+     *
+     * @return void
      */
     protected function bootstrap($appBootstrap, $appenv, $debug)
     {
@@ -256,6 +260,8 @@ class ProcessSlave
      * to the master process after each request.
      *
      * @param string $path
+     *
+     * @return void
      */
     public function registerFile($path)
     {
@@ -267,6 +273,8 @@ class ProcessSlave
     /**
      * Sends to the master a snapshot of current known php files, so it can track those files and restart
      * slaves if necessary.
+     *
+     * @return void
      */
     protected function sendCurrentFiles()
     {
@@ -288,6 +296,8 @@ class ProcessSlave
 
     /**
      * Connects to ProcessManager, master process.
+     *
+     * @return void
      */
     public function run()
     {
@@ -328,6 +338,9 @@ class ProcessSlave
         $this->loop->run();
     }
 
+    /**
+     * @return void
+     */
     public function commandBootstrap(array $data, ConnectionInterface $conn)
     {
         $this->bootstrap($this->appBootstrap, $this->config['app-env'], $this->isDebug());
@@ -360,7 +373,10 @@ class ProcessSlave
 
         $logTime = date('d/M/Y:H:i:s O');
 
-        $catchLog = function ($e) {
+        $catchLog = /**
+         * @return Response
+         */
+        function ($e) {
             console_log((string) $e);
             return new Response(500);
         };
@@ -380,7 +396,10 @@ class ProcessSlave
             return $resolve($response);
         });
 
-        $promise = $promise->then(function(ResponseInterface $response) use ($request, $logTime, $remoteIp) {
+        $promise = $promise->then(/**
+         * @return ResponseInterface
+         */
+        function(ResponseInterface $response) use ($request, $logTime, $remoteIp) {
             if ($this->isLogging()) {
                 $this->logResponse($request, $response, $logTime, $remoteIp);
             }
@@ -426,6 +445,9 @@ class ProcessSlave
         return $response;
     }
 
+    /**
+     * @return void
+     */
     protected function prepareEnvironment(ServerRequestInterface $request)
     {
         $_SERVER = $this->baseServer;
@@ -515,10 +537,15 @@ class ProcessSlave
      * @param ResponseInterface $response
      * @param string $timeLocal
      * @param string $remoteIp
+     *
+     * @return void
      */
     protected function logResponse(ServerRequestInterface $request, ResponseInterface $response, $timeLocal, $remoteIp)
     {
-        $logFunction = function($size) use ($request, $response, $timeLocal, $remoteIp) {
+        $logFunction = /**
+         * @return void
+         */
+        function($size) use ($request, $response, $timeLocal, $remoteIp) {
             $requestString = $request->getMethod() . ' ' . $request->getUri()->getPath() . ' HTTP/' . $request->getProtocolVersion();
             $statusCode = $response->getStatusCode();
 
@@ -559,11 +586,17 @@ class ProcessSlave
             /** @var EventEmitterInterface $body */
             $body = $response->getBody();
             $size = strlen(\RingCentral\Psr7\str($response));
-            $body->on('data', function($data) use (&$size) {
+            $body->on('data', /**
+             * @return void
+             */
+            function($data) use (&$size) {
                 $size += strlen($data);
             });
             //using `close` event since `end` is not fired for files
-            $body->on('close', function() use (&$size, $logFunction) {
+            $body->on('close', /**
+             * @return void
+             */
+            function() use (&$size, $logFunction) {
                 $logFunction($size);
             });
         } else {

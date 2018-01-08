@@ -21,6 +21,9 @@ class ProcessClient
         $this->loop = Factory::create();
     }
 
+    /**
+     * @return void
+     */
     protected function request($command, $options, $callback)
     {
         $data = [
@@ -48,17 +51,29 @@ class ProcessClient
         );
     }
 
+    /**
+     * @return void
+     */
     public function getStatus(callable $callback)
     {
-        $this->request('status', [], function($result) use ($callback) {
+        $this->request('status', [], /**
+         * @return void
+         */
+        function($result) use ($callback) {
             $callback(json_decode($result, true));
         });
         $this->loop->run();
     }
 
+    /**
+     * @return void
+     */
     public function stopProcessManager(callable $callback)
     {
-        $this->request('stop', [], function($result) use ($callback) {
+        $this->request('stop', [], /**
+         * @return void
+         */
+        function($result) use ($callback) {
             $callback(json_decode($result, true));
         });
         $this->loop->run();

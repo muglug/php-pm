@@ -15,6 +15,8 @@ class Utils
      * @param object $newThis
      * @param array $args
      * @param string $bindClass
+     *
+     * @return void
      */
     public static function bindAndCall(callable $fn, $newThis, $args = [], $bindClass = null)
     {
@@ -32,6 +34,8 @@ class Utils
      * @param object $object
      * @param string $propertyName
      * @param mixed $newValue
+     *
+     * @return void
      */
     public static function hijackProperty($object, $propertyName, $newValue)
     {

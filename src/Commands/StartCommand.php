@@ -14,6 +14,8 @@ class StartCommand extends Command
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     protected function configure()
     {

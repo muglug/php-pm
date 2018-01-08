@@ -197,6 +197,8 @@ class ProcessManager
 
     /**
      * Handles termination signals, so we can gracefully stop all servers.
+     *
+     * @return void
      */
     public function shutdown($graceful = false)
     {
@@ -234,6 +236,8 @@ class ProcessManager
 
     /**
      * @param bool $populateServer
+     *
+     * @return void
      */
     public function setPopulateServer($populateServer)
     {
@@ -250,6 +254,8 @@ class ProcessManager
 
     /**
      * @param int $maxRequests
+     *
+     * @return void
      */
     public function setMaxRequests($maxRequests)
     {
@@ -258,6 +264,8 @@ class ProcessManager
 
     /**
      * @param string $phpCgiExecutable
+     *
+     * @return void
      */
     public function setPhpCgiExecutable($phpCgiExecutable)
     {
@@ -266,6 +274,8 @@ class ProcessManager
 
     /**
      * @param string $bridge
+     *
+     * @return void
      */
     public function setBridge($bridge)
     {
@@ -282,6 +292,8 @@ class ProcessManager
 
     /**
      * @param string $appBootstrap
+     *
+     * @return void
      */
     public function setAppBootstrap($appBootstrap)
     {
@@ -298,6 +310,8 @@ class ProcessManager
 
     /**
      * @param string|null $appenv
+     *
+     * @return void
      */
     public function setAppEnv($appenv)
     {
@@ -322,6 +336,8 @@ class ProcessManager
 
     /**
      * @param boolean $logging
+     *
+     * @return void
      */
     public function setLogging($logging)
     {
@@ -338,12 +354,17 @@ class ProcessManager
 
     /**
      * @param string $staticDirectory
+     *
+     * @return void
      */
     public function setStaticDirectory($staticDirectory)
     {
         $this->staticDirectory = $staticDirectory;
     }
 
+    /**
+     * @return void
+     */
     public function setPIDFile($pidfile)
     {
         $this->pidfile = $pidfile;
@@ -358,6 +379,8 @@ class ProcessManager
 
     /**
      * @param boolean $debug
+     *
+     * @return void
      */
     public function setDebug($debug)
     {
@@ -366,6 +389,8 @@ class ProcessManager
 
     /**
      * Starts the main loop. Blocks.
+     *
+     * @return void
      */
     public function run()
     {
@@ -408,12 +433,17 @@ class ProcessManager
 
     /**
      * Handling zombie processes on SIGCHLD
+     *
+     * @return void
      */
     public function handleSigchld()
     {
         $pid = pcntl_waitpid(-1, $status, WNOHANG);
     }
 
+    /**
+     * @return void
+     */
     public function writePid()
     {
         $pid = getmypid();
@@ -424,6 +454,8 @@ class ProcessManager
      * Handles incoming connections from $this->port. Basically redirects to a slave.
      *
      * @param Connection $incoming incoming connection from react
+     *
+     * @return void
      */
     public function onRequest(ConnectionInterface $incoming)
     {
@@ -437,11 +469,16 @@ class ProcessManager
      * Handles data communication from slave -> master
      *
      * @param ConnectionInterface $connection
+     *
+     * @return void
      */
     public function onSlaveConnection(ConnectionInterface $connection)
     {
         $this->bindProcessMessage($connection);
-        $connection->on('close', function () use ($connection) {
+        $connection->on('close', /**
+         * @return void
+         */
+        function () use ($connection) {
             $this->onSlaveClosed($connection);
         });
     }
@@ -503,13 +540,18 @@ class ProcessManager
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandStatus(array $data, ConnectionInterface $conn)
     {
         // remove nasty info about worker's bootstrap fail
         $conn->removeAllListeners('close');
         if ($this->output->isVeryVerbose()) {
-            $conn->on('close', function () {
+            $conn->on('close', /**
+             * @return void
+             */
+            function () {
                 $this->output->writeln('Status command requested');
             });
         }
@@ -551,11 +593,16 @@ class ProcessManager
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandStop(array $data, ConnectionInterface $conn)
     {
         if ($this->output->isVeryVerbose()) {
-            $conn->on('close', function () {
+            $conn->on('close', /**
+             * @return void
+             */
+            function () {
                 $this->output->writeln('Stop command requested');
             });
         }
@@ -570,6 +617,8 @@ class ProcessManager
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandRegister(array $data, ConnectionInterface $conn)
     {
@@ -601,6 +650,8 @@ class ProcessManager
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandReady(array $data, ConnectionInterface $conn)
     {
@@ -639,10 +690,12 @@ class ProcessManager
     /**
      * Prints logs.
      *
-     * @Todo, integrate Monolog.
+     * @Todo , integrate Monolog.
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandLog(array $data, ConnectionInterface $conn)
     {
@@ -654,6 +707,8 @@ class ProcessManager
      *
      * @param array      $data
      * @param ConnectionInterface $conn
+     *
+     * @return void
      */
     protected function commandFiles(array $data, ConnectionInterface $conn)
     {
@@ -674,6 +729,8 @@ class ProcessManager
      * Handles failed application bootstraps.
      *
      * @param int $port
+     *
+     * @return void
      */
     protected function bootstrapFailed($port)
     {
@@ -813,6 +870,8 @@ class ProcessManager
 
     /**
      * Restart all slaves. Necessary when watched files have changed.
+     *
+     * @return void
      */
     public function restartSlaves()
     {
@@ -831,6 +890,8 @@ class ProcessManager
 
     /**
      * Check if all slaves have become available
+     *
+     * @return bool
      */
     protected function allSlavesReady()
     {
@@ -846,6 +907,8 @@ class ProcessManager
      * Creates a new ProcessSlave instance.
      *
      * @param int $port
+     *
+     * @return void
      */
     protected function newSlaveInstance($port)
     {
@@ -929,6 +992,8 @@ EOF;
 
     /**
      * @param Slave $slave
+     *
+     * @return void
      */
     private function terminateSlave($slave)
     {

@@ -39,6 +39,8 @@ class SlavePool
      * Remove from pool
      *
      * @param int $port
+     *
+     * @return void
      */
     public function remove(Slave $slave)
     {
@@ -70,6 +72,8 @@ class SlavePool
      * Get slave slaves by connection
      *
      * @throws \Exception
+     *
+     * @return Slave
      */
     public function getByConnection(ConnectionInterface $connection)
     {
@@ -86,10 +90,17 @@ class SlavePool
 
     /**
      * Get multiple slaves by status
+     *
+     * @return Slave[]
+     *
+     * @psalm-return array<mixed, Slave>
      */
     public function getByStatus($status)
     {
-        return array_filter($this->slaves, function($slave) use ($status) {
+        return array_filter($this->slaves, /**
+         * @return bool
+         */
+        function($slave) use ($status) {
             return $status === Slave::ANY || $status === $slave->getStatus();
         });
     }

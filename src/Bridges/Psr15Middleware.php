@@ -11,6 +11,8 @@ class Psr15Middleware implements BridgeInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     public function bootstrap($appBootstrap, $appenv, $debug)
     {

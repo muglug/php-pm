@@ -15,6 +15,8 @@ class StopCommand extends Command
 
     /**
      * {@inheritdoc}
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -37,7 +39,10 @@ class StopCommand extends Command
         $handler = new ProcessClient();
         $handler->setSocketPath($config['socket-path']);
 
-        $handler->stopProcessManager(function ($status) use ($output) {
+        $handler->stopProcessManager(/**
+         * @return void
+         */
+        function ($status) use ($output) {
             $output->writeln('Requested process manager to stop.');
         });
 

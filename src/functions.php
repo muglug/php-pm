@@ -6,12 +6,14 @@ use PHPPM\ProcessSlave;
 
 /**
  * Adds a file path to the watcher list of PPM's master process.
- *
+ * 
  * If you have a custom template engine, cache engine or something dynamic
  * you probably want to call this function to let PPM know,
  * that you want to restart all workers when this file has changed.
  *
  * @param string $path
+ *
+ * @return void
  */
 function register_file($path)
 {
@@ -23,6 +25,8 @@ function register_file($path)
  *
  * @param mixed $expression The variable you want to export.
  * @param mixed $_          [optional]
+ *
+ * @return void
  */
 function console_log($expression, $_ = null)
 {
@@ -40,7 +44,10 @@ function pcntl_enabled()
 {
     $requiredFunctions = array('pcntl_signal', 'pcntl_signal_dispatch', 'pcntl_waitpid');
     $disabledFunctions = explode(',', (string) ini_get('disable_functions'));
-    $disabledFunctions = array_map(function ($item) {
+    $disabledFunctions = array_map(/**
+     * @return string
+     */
+    function ($item) {
         return trim($item);
     }, $disabledFunctions);
 
