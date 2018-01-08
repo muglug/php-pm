@@ -3,33 +3,9 @@
     name="Example Psalm config with recommended defaults"
     stopOnFirstError="false"
     useDocblockTypes="true"
-    totallyTyped="false"
+    totallyTyped="true"
 >
     <projectFiles>
         <directory name="src" />
     </projectFiles>
-
-    <issueHandlers>
-        <LessSpecificReturnType errorLevel="info" />
-
-        <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
-        <DeprecatedMethod errorLevel="info" />
-
-        <MissingClosureReturnType errorLevel="info" />
-        <MissingReturnType errorLevel="info" />
-        <MissingPropertyType errorLevel="info" />
-        <InvalidDocblock errorLevel="info" />
-
-        <PropertyNotSetInConstructor errorLevel="info" />
-        <MissingConstructor errorLevel="info" />
-        <UntypedParam errorLevel="info" />
-
-        <PossiblyFalseArgument errorLevel="info" />
-        <InvalidFalsableReturnType errorLevel="info" />
-
-        <InvalidOperand errorLevel="info" />
-        <PossiblyNullOperand errorLevel="info" />
-
-        <InvalidScalarArgument errorLevel="info" />
-    </issueHandlers>
 </psalm>
